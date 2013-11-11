@@ -10,8 +10,11 @@ import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
@@ -28,6 +31,7 @@ public class Console extends javax.swing.JFrame {
     public static final SimpleAttributeSet NM_PRE = new SimpleAttributeSet();
     public static final SimpleAttributeSet NM_ERROR = new SimpleAttributeSet();
     public static final SimpleAttributeSet NM_MSG = new SimpleAttributeSet();
+    public static final SimpleAttributeSet NM_OK = new SimpleAttributeSet();
             
     private NetMessage nm;
     
@@ -46,14 +50,53 @@ public class Console extends javax.swing.JFrame {
         
         NM_PRE.addAttribute(StyleConstants.Foreground, Color.BLUE);
         NM_PRE.addAttribute(StyleConstants.Bold, true);
+        
+        NM_PRE.addAttribute(StyleConstants.Foreground, Color.GREEN);
+        NM_PRE.addAttribute(StyleConstants.Bold, true);
     }
     
     public void initializeNetMessage() throws IOException {
         nm = new NetMessage();
     }
     
-    public NetMessage getNetMessage() {
-        return this.nm;
+    public void connect() {
+        //Need a new thread as this is a blocking function
+        //Use SwingWorker so it doesn't run on the EDT
+        SwingWorker worker = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                for(int r=0; r <= 5; r++) {
+                    try {
+                        if(nm.getReader() == null)
+                            nm.createConnection();
+                        else {
+                            AppendStyledText("::", NM_PRE);
+                            AppendStyledLine("Successfully created a Connection!", NM_OK);
+                            return null;
+                        }
+                    } catch (SocketTimeoutException ex) {
+                        if(r < 5 ) {
+                            AppendStyledText("::", NM_PRE);
+                            AppendStyledLine("Could not create connection, retrying", NM_MSG);
+                        } else {
+                            AppendStyledText("::", NM_PRE);
+                            AppendStyledLine("Failed to create a connection!", NM_ERROR);
+                        }
+                    } catch (IOException ex) {
+                        AppendStyledText("::", NM_PRE);
+                        AppendStyledLine("Failed to create a connection!", NM_ERROR);
+                        Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
+                }
+                
+                //The return type is null
+                return null;
+            }
+        };
+        
+        worker.execute();
+        
     }
 
     /**
@@ -173,6 +216,13 @@ public class Console extends javax.swing.JFrame {
                     } catch (IOException ex) {
                         //Failed message
                         AppendStyledText("::", NM_PRE);
+                        AppendStyledLine("Error binding port. Is it already in use?", NM_ERROR);
+                        //Get rid of it and exit this function
+                        pd.dispose();
+                        return;
+                    } catch (NumberFormatException ex) {
+                        //Failed message
+                        AppendStyledText("::", NM_PRE);
                         AppendStyledLine("Not a valid Integer", NM_ERROR);
                         //Get rid of it and exit this function
                         pd.dispose();
@@ -182,6 +232,9 @@ public class Console extends javax.swing.JFrame {
                     //Success message
                     AppendStyledText("::", NM_PRE);
                     AppendStyledLine("Successfully bound to port " + nm.getPort(), NM_MSG);
+                    
+                    //try and connect
+                    connect();
                 }
                 
                 pd.dispose();
@@ -200,4 +253,5 @@ public class Console extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
 }

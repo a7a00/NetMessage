@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 /**
  *
@@ -24,7 +25,7 @@ public class NetMessage {
     private Socket client;
     //Anything we get from the Robot will be read by this
     private BufferedReader clientInput;
-    //The default port is 5000
+    //The default port is 5555
     private int port;
     
     /**
@@ -33,8 +34,8 @@ public class NetMessage {
      */
     public NetMessage() throws IOException {
         server = new ServerSocket(5000);
-        server.setSoTimeout(10);
-        this.port = 5000;
+        server.setSoTimeout(5000);
+        this.port = 5555;
     }
     
     /**
@@ -44,14 +45,15 @@ public class NetMessage {
      */
     public NetMessage(int port) throws IOException {
         server = new ServerSocket(port);
-        server.setSoTimeout(10);
+        server.setSoTimeout(5000);
         this.port = port;
     }
     /**
      * Tries to create the connection between the Robot.
-     * @throws IOException If a connection could not be established after 10 seconds
+     * @throws IOException If there was an error establishing the connection
+     * @throws SocketTimeoutException If the connection timed out
      */
-    public void createConnection() throws IOException {
+    public void createConnection() throws IOException, SocketTimeoutException {
         client = server.accept();
         clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
     }

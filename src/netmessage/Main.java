@@ -6,13 +6,20 @@
 
 package netmessage;
 
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author isaac
  */
 public class Main {
     public static void main(String [] args) {
-        Console con = new Console();
-        con.setVisible(true);
+        //According to the docs, this is the correct way to start a Swing thread
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Console con = new Console();
+                con.setVisible(true);
+            }
+        });
     }
 }
