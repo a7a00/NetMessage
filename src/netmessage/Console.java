@@ -7,6 +7,8 @@
 package netmessage;
 
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -157,7 +159,34 @@ public class Console extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ChangePortItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangePortItemActionPerformed
-        
+        final PortDialog pd = new PortDialog(this, false);
+        //Enable it
+        pd.setVisible(true);
+        //We fire this event whenever one of the buttons is pressed
+        pd.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                //Get the information
+                if(pd.getTextField() != null){
+                    try {
+                        //Try and bind the new port
+                        nm = new NetMessage(Integer.parseInt(pd.getTextField()));
+                    } catch (IOException ex) {
+                        //Failed message
+                        AppendStyledText("::", NM_PRE);
+                        AppendStyledLine("Not a valid Integer", NM_ERROR);
+                        //Get rid of it and exit this function
+                        pd.dispose();
+                        return;
+                    }
+                    
+                    //Success message
+                    AppendStyledText("::", NM_PRE);
+                    AppendStyledLine("Successfully bound to port " + nm.getPort(), NM_MSG);
+                }
+                
+                pd.dispose();
+            }
+        });
     }//GEN-LAST:event_ChangePortItemActionPerformed
 
 
