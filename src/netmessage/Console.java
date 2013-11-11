@@ -46,11 +46,19 @@ public class Console extends javax.swing.JFrame {
         NM_PRE.addAttribute(StyleConstants.Bold, true);
     }
     
-    public NetMessage initializeNetMessage() throws IOException {
+    public void initializeNetMessage() throws IOException {
         nm = new NetMessage();
-        return nm;
+    }
+    
+    public NetMessage getNetMessage() {
+        return this.nm;
     }
 
+    /**
+     * Appends the specified text and adds a newline.
+     * @param text The text to print to the console
+     * @param s An AttributeSet to style the text
+     */
     public void AppendStyledLine(String text, AttributeSet s){
         try {
             StyledDocument doc = ConsoleTextPane.getStyledDocument();
@@ -61,6 +69,11 @@ public class Console extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Adds the text to end of the document (Usually on the same line)
+     * @param text Text to add
+     * @param s An AttributeSet to style the text
+     */
     public void AppendStyledText(String text, AttributeSet s){
         try {
             StyledDocument doc = ConsoleTextPane.getStyledDocument();
@@ -70,6 +83,8 @@ public class Console extends javax.swing.JFrame {
             Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -85,6 +100,10 @@ public class Console extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -98,6 +117,23 @@ public class Console extends javax.swing.JFrame {
 
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Connection");
+
+        jMenuItem2.setForeground(new java.awt.Color(45, 45, 45));
+        jMenuItem2.setText("Change Port");
+        jMenu3.add(jMenuItem2);
+
+        jMenuItem3.setForeground(new java.awt.Color(45, 45, 45));
+        jMenuItem3.setText("Change IP");
+        jMenu3.add(jMenuItem3);
+
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem4.setForeground(new java.awt.Color(45, 45, 45));
+        jMenuItem4.setText("Reconnect");
+        jMenu3.add(jMenuItem4);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -119,35 +155,16 @@ public class Console extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        NetMessage connm;
-        
-        Console con = new Console();
-        con.setVisible(true);
-        
-        con.AppendStyledLine("Welcome to NetMessage!", NM_MSG);
-        
-        //Try and create a new NetMessage
-        try {
-            connm = con.initializeNetMessage();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            con.AppendStyledText("::", NM_PRE);
-            con.AppendStyledLine("Could not create a socket on port 123!", NM_ERROR);
-        }
-        
-        con.AppendStyledText("::", NM_PRE);
-        con.AppendStyledLine("Successfully created a socket on port 123!", NM_MSG);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane ConsoleTextPane;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
