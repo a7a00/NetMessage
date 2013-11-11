@@ -101,11 +101,11 @@ public class Console extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        ChangePortItem = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("NetMessage");
 
         ConsoleTextPane.setEditable(false);
         ConsoleTextPane.setBackground(new java.awt.Color(0, 0, 0));
@@ -120,13 +120,14 @@ public class Console extends javax.swing.JFrame {
 
         jMenu3.setText("Connection");
 
-        jMenuItem2.setForeground(new java.awt.Color(45, 45, 45));
-        jMenuItem2.setText("Change Port");
-        jMenu3.add(jMenuItem2);
-
-        jMenuItem3.setForeground(new java.awt.Color(45, 45, 45));
-        jMenuItem3.setText("Change IP");
-        jMenu3.add(jMenuItem3);
+        ChangePortItem.setForeground(new java.awt.Color(45, 45, 45));
+        ChangePortItem.setText("Change Port");
+        ChangePortItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChangePortItemActionPerformed(evt);
+            }
+        });
+        jMenu3.add(ChangePortItem);
 
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem4.setForeground(new java.awt.Color(45, 45, 45));
@@ -155,15 +156,18 @@ public class Console extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void ChangePortItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangePortItemActionPerformed
+        
+    }//GEN-LAST:event_ChangePortItemActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ChangePortItem;
     private javax.swing.JTextPane ConsoleTextPane;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
