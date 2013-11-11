@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 /**
@@ -22,7 +23,9 @@ import javax.swing.text.StyledDocument;
 public class Console extends javax.swing.JFrame {
     
     //Constants for NetMessage itself
-    public static final SimpleAttributeSet NM_ERROR = new SimpleAttributeSet().addAttribute(, WIDTH);
+    public static final SimpleAttributeSet NM_PRE = new SimpleAttributeSet();
+    public static final SimpleAttributeSet NM_ERROR = new SimpleAttributeSet();
+    public static final SimpleAttributeSet NM_MSG = new SimpleAttributeSet();
             
     private NetMessage nm;
     
@@ -31,6 +34,16 @@ public class Console extends javax.swing.JFrame {
      */
     public Console() {
         initComponents();
+        
+        //Add the attributes
+        NM_ERROR.addAttribute(StyleConstants.Foreground, Color.RED);
+        NM_ERROR.addAttribute(StyleConstants.Bold, true);
+        
+        NM_MSG.addAttribute(StyleConstants.Foreground, Color.WHITE);
+        NM_MSG.addAttribute(StyleConstants.Bold, true);
+        
+        NM_PRE.addAttribute(StyleConstants.Foreground, Color.BLUE);
+        NM_PRE.addAttribute(StyleConstants.Bold, true);
     }
     
     public NetMessage initializeNetMessage() throws IOException {
@@ -38,10 +51,24 @@ public class Console extends javax.swing.JFrame {
         return nm;
     }
 
-    public void AppendStyledText(String text, AttributeSet s) throws BadLocationException {
-        StyledDocument doc = ConsoleTextPane.getStyledDocument();
-        doc.insertString(doc.getLength(), text, s);
-        ConsoleTextPane.setStyledDocument(doc);
+    public void AppendStyledLine(String text, AttributeSet s){
+        try {
+            StyledDocument doc = ConsoleTextPane.getStyledDocument();
+            doc.insertString(doc.getLength(), text + "\n", s);
+            ConsoleTextPane.setStyledDocument(doc);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void AppendStyledText(String text, AttributeSet s){
+        try {
+            StyledDocument doc = ConsoleTextPane.getStyledDocument();
+            doc.insertString(doc.getLength(), text, s);
+            ConsoleTextPane.setStyledDocument(doc);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(Console.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -64,7 +91,6 @@ public class Console extends javax.swing.JFrame {
         ConsoleTextPane.setEditable(false);
         ConsoleTextPane.setBackground(new java.awt.Color(0, 0, 0));
         ConsoleTextPane.setForeground(new java.awt.Color(255, 255, 255));
-        ConsoleTextPane.setText("Welcome to Message Console!");
         jScrollPane1.setViewportView(ConsoleTextPane);
 
         jMenu1.setText("File");
@@ -102,15 +128,19 @@ public class Console extends javax.swing.JFrame {
         Console con = new Console();
         con.setVisible(true);
         
+        con.AppendStyledLine("Welcome to NetMessage!", NM_MSG);
+        
         //Try and create a new NetMessage
         try {
             connm = con.initializeNetMessage();
         } catch (IOException ex) {
             ex.printStackTrace();
-            con.AppendStyledText("Could not create a socket on port 123!", )
+            con.AppendStyledText("::", NM_PRE);
+            con.AppendStyledLine("Could not create a socket on port 123!", NM_ERROR);
         }
         
-        //Loop
+        con.AppendStyledText("::", NM_PRE);
+        con.AppendStyledLine("Successfully created a socket on port 123!", NM_MSG);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
