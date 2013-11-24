@@ -17,7 +17,7 @@ import java.net.SocketTimeoutException;
  *
  * @author cnrobotics
  */
-public class NetMessage {
+class NetMessage {
 
     //This is the socket we open so the Robot can communitcate with us
     private ServerSocket server;
