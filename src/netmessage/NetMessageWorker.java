@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package netmessage;
 
 import java.io.IOException;
@@ -18,19 +12,22 @@ import netmessage.ui.WindowMain;
 /**
  * SwingWorker class for connecting and communicating with NetMessage.
  * 
+ * <b>Changing the port is done by creating a new NetMessageWorker!</b>
+ * 
  * A Message Format should look like this:
  * 
- * <code>[type];[message];[newline]</code>
+ * <code>[type];[message]</code>
  * 
  * <code>[Type]</code> should always be set to 1 for incoming messages. 0 is for program (local) messages
  * 
- * <code>[Message]</code> is the message. Standard ANSII escape codes should be used:
+ * <code>[Message]</code> is the message. Standard ASCII control characters should be used. 
+ * Use carat notation.
+ * (E.g Newline should be written as "^J."
+ *      CSI codes should be written as "^[CSI"
+ *      "^" should be written as "^^")
  * 
- * Escape Character is ^[ (\033, \x1B)
  * 
- * <code>[Newline]</code> is a boolean value of 0(False) or 1(True), depending on if there should be a newline or
- * not. Note that any value higher than 1 will be registered as true.
- * 
+ * Note: Not all escape codes are supported or will be supported (eg. STX, ETX, EOT, never be supported). 
  * @author isaac
  */
 public class NetMessageWorker extends SwingWorker<Integer, String>{
@@ -38,6 +35,7 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
     WindowMain window;
     NetMessage nm;
     private int maxFailedAttempts = 5;
+    //private boolean useRaw = false;
     
     public NetMessageWorker(WindowMain window) {
         this.window = window;
@@ -73,19 +71,22 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
         
         while(failedAttempts < this.maxFailedAttempts) {
             try {
-                publish("0;6;Listening for client connect...;1");
+                publish(this.createMessage("Listing for client connect..."));
                 nm.createConnection();
             } catch (SocketTimeoutException e) {
-                publish("0;5;Listen timed out!;1");
+                publish(this.createError("Listen timed out!"));
                 failedAttempts++;
             }
         }
         
         //Return an error code if connection failed
         if(failedAttempts < this.maxFailedAttempts) {
-            publish("0;5;Error: Could not establish a connection with client!;1");
+            publish(this.createError("Error: Could not create connection with client!"));
             return 2;
         }
+        
+        //Everything went okay!
+        //Start parsing messages and the like
         
         return 1;
     }
@@ -98,6 +99,14 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
         for (String s : list) {
             
         }
+    }
+    
+    private String createError(String error) {
+        return "0;" + AsciiSGR.BOLD + AsciiSGR.BLUE + ":: " + AsciiSGR.RED + error + AsciiSGR.NORM + "\n";
+    }
+    
+    private String createMessage(String error) {
+        return "0;" + AsciiSGR.BOLD + AsciiSGR.BLUE + ":: " + AsciiSGR.F_DEFALT + error + AsciiSGR.NORM + "\n";
     }
     
     public void setMaxFailedAttempts(int i) {
