@@ -1,5 +1,8 @@
 package netmessage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Holds translation for the ANSI CSI SGR codes.
  * 
@@ -15,11 +18,11 @@ ANSI CSI sequences usally follow ^[.
 SGR is a CSI sequence defined as (^[#n, where # is a number).
 */
 public enum AsciiSGR {
-    NORM("^[0m"),
-    BOLD("^[1m"),
-    FAINT("^[2m"),
-    ITALIC("^[3m"),
-    UNDERLINE("^[4m"),
+    NORM("^[00m"),
+    BOLD("^[01m"),
+    FAINT("^[02m"),
+    ITALIC("^[03m"),
+    UNDERLINE("^[04m"),
     //TODO: Support SGR codes 5-29
     
     /* Forground Color Escapes */
@@ -67,14 +70,25 @@ public enum AsciiSGR {
     //108 is the same as 48, skipped
     //108 is the same as 49, skipped
     
-    private AsciiSGR(final String text) {
-        this.text = text;
+    private final String value;
+    private static final HashMap<String, AsciiSGR> lookup = new HashMap<>();
+    
+    static {
+        for(AsciiSGR i : AsciiSGR.values()) {
+            lookup.put(i.toString(), i);
+        }
     }
     
-    private final String text;
-
+    AsciiSGR(String value) {
+        this.value = value;
+    }
+    
     @Override
     public String toString() {
-        return text;
+        return this.value;
+    }
+    
+    public static AsciiSGR lookupValue(String value) {
+        return AsciiSGR.lookup.get(value);
     }
 }

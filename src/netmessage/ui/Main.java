@@ -6,6 +6,12 @@
 
 package netmessage.ui;
 
+import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import netmessage.NetMessageWorker;
 
 /**
@@ -13,7 +19,7 @@ import netmessage.NetMessageWorker;
  * @author isaac
  */
 public class Main {
-    public static void main() {
+    public static void main(String[] args) {
         WindowMain wm = new WindowMain();
         
         wm.setVisible(true);

@@ -7,8 +7,6 @@
 package netmessage.ui;
 
 import java.awt.Color;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
