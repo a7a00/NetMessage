@@ -18,9 +18,10 @@ public class SettingsDialog extends javax.swing.JFrame {
      * Creates new form ConnectionSettingsDialog
      */
     
-    
+    private Settings settings;
     
     public SettingsDialog(Settings settings) {
+        this.settings = settings;
         initComponents();
     }
 
