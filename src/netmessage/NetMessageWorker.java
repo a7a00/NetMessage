@@ -71,11 +71,11 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
 
     @Override
     protected Integer doInBackground() throws Exception {
-        int failedAttempts = 0;
+        int failedAttempts = 1;
         
-        while(failedAttempts < this.maxFailedAttempts) {
+        while(failedAttempts <= this.maxFailedAttempts) {
             try {
-                publish(this.createLMessage("Listening for client connect..."));
+                publish(this.createLMessage("Listening for client connect... (" + failedAttempts + "/" + this.maxFailedAttempts + ")"));
                 nm.createConnection();
             } catch (SocketTimeoutException e) {
                 publish(this.createLError("Listen timed out!"));
@@ -84,7 +84,7 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
         }
         
         //Return an error code if connection failed
-        if(failedAttempts <= this.maxFailedAttempts) {
+        if(failedAttempts >= this.maxFailedAttempts) {
             publish(this.createLError("Error: Could not create connection with client!"));
             return 2;
         }

@@ -12,6 +12,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import netmessage.NetMessageWorker;
 
 /**
  *
@@ -25,6 +26,8 @@ public class WindowMain extends javax.swing.JFrame {
     public static final SimpleAttributeSet NM_MSG = new SimpleAttributeSet();
     public static final SimpleAttributeSet NM_OK = new SimpleAttributeSet();
     
+    NetMessageWorker worker;
+    SettingsDialog settings;
     
     public WindowMain() {
         initComponents();
@@ -41,6 +44,8 @@ public class WindowMain extends javax.swing.JFrame {
         
         NM_PRE.addAttribute(StyleConstants.Foreground, Color.GREEN);
         NM_PRE.addAttribute(StyleConstants.Bold, true);
+        
+        settings = new SettingsDialog();
     }
 
     /**
@@ -81,7 +86,12 @@ public class WindowMain extends javax.swing.JFrame {
         ConsoleTextArea = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        ConnectSettingsButton = new javax.swing.JMenuItem();
+        ConnectButton = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -92,13 +102,45 @@ public class WindowMain extends javax.swing.JFrame {
 
         ConsoleTextArea.setBackground(java.awt.Color.black);
         ConsoleTextArea.setForeground(java.awt.Color.lightGray);
-        ConsoleTextArea.setText("Welcome to NetConsole!");
+        ConsoleTextArea.setText("Welcome to NetConsole!\nPlease select \"Connect\" from the Connection menu.\n");
         ConsoleScrollPane.setViewportView(ConsoleTextArea);
 
         jMenu1.setText("File");
+
+        jMenuItem4.setForeground(new java.awt.Color(45, 45, 45));
+        jMenuItem4.setText("Save Output");
+        jMenu1.add(jMenuItem4);
+
         jMenuBar1.add(jMenu1);
 
+        jMenu3.setText("Edit");
+
+        jMenuItem3.setForeground(new java.awt.Color(45, 45, 45));
+        jMenuItem3.setText("Copy");
+        jMenu3.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu3);
+
         jMenu2.setText("Connection");
+
+        ConnectSettingsButton.setForeground(new java.awt.Color(45, 45, 45));
+        ConnectSettingsButton.setText("Connection Settings");
+        ConnectSettingsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConnectSettingsButtonActionPerformed(evt);
+            }
+        });
+        jMenu2.add(ConnectSettingsButton);
+
+        ConnectButton.setForeground(new java.awt.Color(45, 45, 45));
+        ConnectButton.setText("Connect");
+        ConnectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConnectButtonActionPerformed(evt);
+            }
+        });
+        jMenu2.add(ConnectButton);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -107,23 +149,37 @@ public class WindowMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ConsoleScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+            .addComponent(ConsoleScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ConsoleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+            .addComponent(ConsoleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectButtonActionPerformed
+        worker = new NetMessageWorker(this, 5555);
+        worker.execute();
+    }//GEN-LAST:event_ConnectButtonActionPerformed
+
+    private void ConnectSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectSettingsButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ConnectSettingsButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem ConnectButton;
+    private javax.swing.JMenuItem ConnectSettingsButton;
     private javax.swing.JScrollPane ConsoleScrollPane;
     private javax.swing.JTextPane ConsoleTextArea;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     // End of variables declaration//GEN-END:variables
 }
