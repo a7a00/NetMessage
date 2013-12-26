@@ -6,6 +6,7 @@
 
 package netmessage.ui;
 
+import netmessage.ui.settings.SettingsDialog;
 import java.awt.Color;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -165,7 +166,7 @@ public class WindowMain extends javax.swing.JFrame {
     }//GEN-LAST:event_ConnectButtonActionPerformed
 
     private void ConnectSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectSettingsButtonActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_ConnectSettingsButtonActionPerformed
 
 

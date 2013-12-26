@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 
-package netmessage.ui;
+package netmessage.ui.settings;
+
+import netmessage.ui.settings.Settings;
 
 /**
  *
@@ -15,7 +17,10 @@ public class SettingsDialog extends javax.swing.JFrame {
     /**
      * Creates new form ConnectionSettingsDialog
      */
-    public SettingsDialog() {
+    
+    
+    
+    public SettingsDialog(Settings settings) {
         initComponents();
     }
 
