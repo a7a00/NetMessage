@@ -91,24 +91,25 @@ public class SettingsDialog extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
+        allowedTable.setColumnSelectionAllowed(true);
         allowedTable.setEnabled(false);
+        allowedTable.getTableHeader().setReorderingAllowed(false);
         allowedTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 allowedTablePropertyChange(evt);
             }
         });
         jScrollPane1.setViewportView(allowedTable);
+        allowedTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (allowedTable.getColumnModel().getColumnCount() > 0) {
-            allowedTable.getColumnModel().getColumn(0).setCellRenderer(null);
-            allowedTable.getColumnModel().getColumn(1).setCellEditor(ipr);
-            allowedTable.getColumnModel().getColumn(1).setCellRenderer(ipr);
+            allowedTable.getColumnModel().getColumn(1).setCellRenderer(null);
         }
 
         allConnectionsEnabled.setSelected(true);
@@ -162,6 +163,11 @@ public class SettingsDialog extends javax.swing.JFrame {
         tabs.addTab("Connection", jPanel2);
 
         okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
 
@@ -198,22 +204,28 @@ public class SettingsDialog extends javax.swing.JFrame {
     private void allowedTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_allowedTablePropertyChange
         DefaultTableModel dtm = (DefaultTableModel)allowedTable.getModel();
         
+        //Prevents editing the table is the checkbox is unchecked
         if(evt.getPropertyName().equals("enabled") && evt.getNewValue().equals(true) && dtm.getRowCount() == 0) {
+            //If there is nothing in the table, create a new row and edit it.
             dtm.addRow(new Object[]{"", ""});
             allowedTable.requestFocusInWindow();
             allowedTable.editCellAt(0, 0);
             allowedTable.setModel(dtm);
         }  else if (evt.getPropertyName().equals("enabled") && evt.getNewValue().equals(false)) {
+            //Stops editing and changes the focus
             allowedTable.getCellEditor().stopCellEditing();
             jLabel1.requestFocusInWindow();
         }
     }//GEN-LAST:event_allowedTablePropertyChange
 
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        System.out.println(this.allowedTable.getValueAt(0, 1));
+    }//GEN-LAST:event_okButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allConnectionsEnabled;
     private javax.swing.JTable allowedTable;
-    private IPRenderer ipr;
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
