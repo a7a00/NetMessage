@@ -166,7 +166,7 @@ public class WindowMain extends javax.swing.JFrame {
     }//GEN-LAST:event_ConnectButtonActionPerformed
 
     private void ConnectSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectSettingsButtonActionPerformed
-        
+        this.settings.setVisible(true);
     }//GEN-LAST:event_ConnectSettingsButtonActionPerformed
 
 

@@ -1,12 +1,29 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license header
+    @Override
+    public StringBuffer format(double d, StringBuffer sb, FieldPosition fp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public StringBuffer format(long l, StringBuffer sb, FieldPosition fp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Number parse(String string, ParsePosition pp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
 package netmessage.ui.settings;
 
-import netmessage.ui.settings.Settings;
+import java.text.NumberFormat;
+import javax.swing.table.DefaultTableModel;
+import netmessage.ui.settings.IPRenderer;
 
 /**
  *
@@ -15,13 +32,9 @@ import netmessage.ui.settings.Settings;
 public class SettingsDialog extends javax.swing.JFrame {
 
     /**
-     * Creates new form ConnectionSettingsDialog
+     * Creates new form SettingsDialog
      */
-    
-    private Settings settings;
-    
-    public SettingsDialog(Settings settings) {
-        this.settings = settings;
+    public SettingsDialog() {
         initComponents();
     }
 
@@ -34,133 +47,182 @@ public class SettingsDialog extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
-        ConnectionPane = new javax.swing.JLayeredPane();
+        tabs = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        f = NumberFormat.getCurrencyInstance();
+        f.setMinimumIntegerDigits(1);
+        f.setMaximumIntegerDigits(4);
+        portField = new javax.swing.JFormattedTextField(f);
+        jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        allowedTable = new javax.swing.JTable();
+        allConnectionsEnabled = new javax.swing.JCheckBox();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("NetMessage Settings");
 
-        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
-        jLayeredPane1.setLayout(jLayeredPane1Layout);
-        jLayeredPane1Layout.setHorizontalGroup(
-            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 476, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 449, Short.MAX_VALUE)
         );
-        jLayeredPane1Layout.setVerticalGroup(
-            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 246, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 232, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("General", jLayeredPane1);
+        tabs.addTab("General", jPanel1);
 
-        ConnectionPane.setToolTipText("Restricts which clients can connect to NetMessage");
+        jLabel1.setText("Port:");
 
-        jLabel1.setText("Port");
-        jLabel1.setToolTipText("The port to listen for connection on.");
+        portField.setText("5555");
 
-        jCheckBox1.setText("Enable IP Restrictions?");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        allowedTable.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.highlight"));
+        allowedTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "null", "null"
+                "Name", "IP"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        allowedTable.setEnabled(false);
+        allowedTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                allowedTablePropertyChange(evt);
+            }
+        });
+        jScrollPane1.setViewportView(allowedTable);
+        if (allowedTable.getColumnModel().getColumnCount() > 0) {
+            allowedTable.getColumnModel().getColumn(0).setCellRenderer(null);
+            allowedTable.getColumnModel().getColumn(1).setCellEditor(ipr);
+            allowedTable.getColumnModel().getColumn(1).setCellRenderer(ipr);
         }
 
-        javax.swing.GroupLayout ConnectionPaneLayout = new javax.swing.GroupLayout(ConnectionPane);
-        ConnectionPane.setLayout(ConnectionPaneLayout);
-        ConnectionPaneLayout.setHorizontalGroup(
-            ConnectionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ConnectionPaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(ConnectionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ConnectionPaneLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
+        allConnectionsEnabled.setSelected(true);
+        allConnectionsEnabled.setText("Allow Connections From All Clients");
+        allConnectionsEnabled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                allConnectionsEnabledActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jSeparator1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jCheckBox1)
-                    .addGroup(ConnectionPaneLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(119, Short.MAX_VALUE))
-        );
-        ConnectionPaneLayout.setVerticalGroup(
-            ConnectionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ConnectionPaneLayout.createSequentialGroup()
+                        .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 12, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(ConnectionPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jCheckBox1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addComponent(allConnectionsEnabled)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        ConnectionPane.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        ConnectionPane.setLayer(jTextField1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        ConnectionPane.setLayer(jCheckBox1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        ConnectionPane.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(allConnectionsEnabled)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
+        );
 
-        jTabbedPane1.addTab("Connection", ConnectionPane);
+        tabs.addTab("Connection", jPanel2);
 
-        jButton1.setText("OK");
-        jButton1.setMaximumSize(new java.awt.Dimension(63, 25));
-        jButton1.setMinimumSize(new java.awt.Dimension(63, 25));
+        okButton.setText("OK");
 
-        jButton2.setText("Cancel");
+        cancelButton.setText("Cancel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(tabs)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cancelButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6))
+                .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tabs)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addGap(6, 6, 6))
+                    .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void allConnectionsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allConnectionsEnabledActionPerformed
+        allowedTable.setEnabled(!allConnectionsEnabled.isSelected());
+    }//GEN-LAST:event_allConnectionsEnabledActionPerformed
+
+    private void allowedTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_allowedTablePropertyChange
+        DefaultTableModel dtm = (DefaultTableModel)allowedTable.getModel();
+        
+        if(evt.getPropertyName().equals("enabled") && evt.getNewValue().equals(true) && dtm.getRowCount() == 0) {
+            dtm.addRow(new Object[]{"", ""});
+            allowedTable.requestFocusInWindow();
+            allowedTable.editCellAt(0, 0);
+            allowedTable.setModel(dtm);
+        }  else if (evt.getPropertyName().equals("enabled") && evt.getNewValue().equals(false)) {
+            allowedTable.getCellEditor().stopCellEditing();
+            jLabel1.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_allowedTablePropertyChange
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLayeredPane ConnectionPane;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox allConnectionsEnabled;
+    private javax.swing.JTable allowedTable;
+    private IPRenderer ipr;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton okButton;
+    private javax.swing.JFormattedTextField portField;
+    private NumberFormat f;
+    private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }
