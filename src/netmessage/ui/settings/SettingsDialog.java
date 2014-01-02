@@ -23,7 +23,7 @@ package netmessage.ui.settings;
 
 import java.text.NumberFormat;
 import javax.swing.table.DefaultTableModel;
-import netmessage.ui.settings.IPRenderer;
+import netmessage.ui.settings.IPEditor;
 
 /**
  *
@@ -109,6 +109,7 @@ public class SettingsDialog extends javax.swing.JFrame {
         jScrollPane1.setViewportView(allowedTable);
         allowedTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (allowedTable.getColumnModel().getColumnCount() > 0) {
+            allowedTable.getColumnModel().getColumn(1).setCellEditor(new IPEditor());
             allowedTable.getColumnModel().getColumn(1).setCellRenderer(null);
         }
 

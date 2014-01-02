@@ -6,8 +6,10 @@
 
 package netmessage.ui.settings;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
@@ -22,17 +24,24 @@ public class IPEditor extends AbstractCellEditor implements TableCellEditor{
     RegexFormatter ipmask;
     
     public IPEditor(){
-        
+       RegexFormatter ipmask = new RegexFormatter("\\d{0,3}\\.\\d{0,3}\\.\\d{0,3}\\.\\d{0,3}");
+       component = new JFormattedTextField(ipmask);
     }
     
     @Override
     public Object getCellEditorValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (String)component.getValue();
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(isSelected){
+            component.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 3));
+        }
+        
+        component.setText((String)value);
+        
+        return component;
     }
     
 }
