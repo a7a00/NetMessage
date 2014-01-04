@@ -50,12 +50,12 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
         try {
             nm = new NetMessage(NetMessage.networkSettings.getInt("port", 5555), NetMessage.networkSettings.getInt("timeout", 5000) * 1000);
             window.AppendStyledText("::", WindowMain.NM_PRE);
-            window.AppendStyledLine("Hosting on port" + nm.getPort(), WindowMain.NM_MSG);
+            window.AppendStyledLine(" Hosting on  " + nm.getPort(), WindowMain.NM_MSG);
 
         } catch (IOException ex) {
             try {
                 window.AppendStyledText("::", WindowMain.NM_PRE);
-                window.AppendStyledLine("Error: Could not estabish a server on port " + NetMessage.networkSettings.getInt("port", 5555), WindowMain.NM_ERROR);
+                window.AppendStyledLine(" Error: Could not estabish a server on port " + NetMessage.networkSettings.getInt("port", 5555), WindowMain.NM_ERROR);
             } catch (BadLocationException ex1) {
                 Logger.getLogger(NetMessageWorker.class.getName()).log(Level.SEVERE, null, ex1);
             }
@@ -71,7 +71,7 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
         } catch (IOException ex) {
             try {
                 window.AppendStyledText("::", WindowMain.NM_PRE);
-                window.AppendStyledLine("Error: Could not estabish a server on port " + port, WindowMain.NM_ERROR);
+                window.AppendStyledLine(" Error: Could not estabish a server on port " + port, WindowMain.NM_ERROR);
             } catch (BadLocationException ex1) {
                 Logger.getLogger(NetMessageWorker.class.getName()).log(Level.SEVERE, null, ex1);
             }
