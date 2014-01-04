@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
+    </Container>
+  </NonVisualComponents>
   <Properties>
     <Property name="title" type="java.lang.String" value="NetMessage Settings"/>
   </Properties>
@@ -64,15 +70,30 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="449" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="165" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="178" max="32767" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="232" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="113" max="32767" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="jLabel2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="IN DEVELOPMENT"/>
+              </Properties>
+            </Component>
+          </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel2">
           <Constraints>
@@ -108,8 +129,8 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="allConnectionsEnabled" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="allConnectionsBox" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -123,8 +144,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="allConnectionsEnabled" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="allConnectionsBox" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="120" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
@@ -140,12 +161,14 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="portField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="5555"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="NetMessage.networkSettings.get(&quot;port&quot;, &quot;5555&quot;)" type="code"/>
+                </Property>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(f)"/>
-                <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="f = NumberFormat.getCurrencyInstance();&#xa;f.setMinimumIntegerDigits(1);&#xa;f.setMaximumIntegerDigits(4);"/>
-                <AuxValue name="JavaCodeGenerator_DeclarationPost" type="java.lang.String" value="private NumberFormat f;"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="f = new RegexFormatter(&quot;^(?=.*\\d)[\\d\\s]{4}$&quot;);"/>
+                <AuxValue name="JavaCodeGenerator_DeclarationPost" type="java.lang.String" value="private RegexFormatter f;"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JSeparator" name="jSeparator1">
@@ -159,15 +182,13 @@
               <SubComponents>
                 <Component class="javax.swing.JTable" name="allowedTable">
                   <Properties>
-                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor" postCode="//Data double vector&#xa;//Oracle required this, not me&#xa;Vector&lt;Vector&lt;String&gt;&gt; data = new Vector&lt;&gt;();&#xa;&#xa;for(int i = 0; i &lt; NetMessage.networkSettings.getInt(&quot;tableRowCount&quot;, 0); i++) {&#xa;    Vector&lt;String&gt; d = new Vector&lt;String&gt;();&#xa;    &#xa;    d.add(NetMessage.networkSettings.get(&quot;Name;&quot; + i, &quot;&quot;));&#xa;    d.add(NetMessage.networkSettings.get(&quot;IP;&quot;+i, &quot;127.0.0.1&quot;));&#xa;    &#xa;    data.add(i, d);&#xa;}&#xa;&#xa;//Names Vector&#xa;Vector&lt;String&gt; names = new Vector&lt;String&gt;();&#xa;names.add(&quot;Name&quot;);&#xa;names.add(&quot;IP&quot;);">
                       <Color blue="ff" green="ff" id="Button.highlight" palette="3" red="ff" type="palette"/>
                     </Property>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="2" rowCount="0">
-                        <Column editable="true" title="Name" type="java.lang.String"/>
-                        <Column editable="true" title="IP" type="java.lang.String"/>
-                      </Table>
+                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="if(NetMessage.networkSettings.getBoolean(&quot;allowAllConnections&quot;, true) == true) {&#xa;    allowedTable.setEnabled(false);&#xa;} else {&#xa;    allowedTable.setEnabled(true);&#xa;}">
+                      <Connection code="new javax.swing.table.DefaultTableModel(data, names)&#xa;" type="code"/>
                     </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="Press enter to add a new row"/>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="1">
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -180,31 +201,31 @@
                           <Editor editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                             <Connection code="new IPEditor()" type="code"/>
                           </Editor>
-                          <Renderer editor="org.netbeans.modules.form.ComponentChooserEditor">
-                            <ComponentRef name="null"/>
-                          </Renderer>
+                          <Renderer/>
                         </Column>
                       </TableColumnModel>
                     </Property>
                     <Property name="columnSelectionAllowed" type="boolean" value="true"/>
-                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                       <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                     </Property>
                   </Properties>
                   <Events>
                     <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="allowedTablePropertyChange"/>
+                    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="allowedTableKeyPressed"/>
                   </Events>
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JCheckBox" name="allConnectionsEnabled">
+            <Component class="javax.swing.JCheckBox" name="allConnectionsBox">
               <Properties>
-                <Property name="selected" type="boolean" value="true"/>
+                <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="NetMessage.networkSettings.getBoolean(&quot;allowAllConnections&quot;, true)" type="code"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Allow Connections From All Clients"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allConnectionsEnabledActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allConnectionsBoxActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
@@ -223,6 +244,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Cancel"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

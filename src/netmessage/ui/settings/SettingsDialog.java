@@ -21,23 +21,35 @@
 
 package netmessage.ui.settings;
 
-import java.text.NumberFormat;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
 import javax.swing.table.DefaultTableModel;
-import netmessage.ui.settings.IPEditor;
+import netmessage.NetMessage;
 
 /**
  *
  * @author isaac
  */
 public class SettingsDialog extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form SettingsDialog
      */
     public SettingsDialog() {
         initComponents();
+        
+        //Load the config
+        loadConfig();
     }
 
+    private void loadConfig() {
+        portField.setText(NetMessage.networkSettings.get("port", "5555"));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,77 +59,97 @@ public class SettingsDialog extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         tabs = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        f = NumberFormat.getCurrencyInstance();
-        f.setMinimumIntegerDigits(1);
-        f.setMaximumIntegerDigits(4);
+        f = new RegexFormatter("^(?=.*\\d)[\\d\\s]{4}$");
         portField = new javax.swing.JFormattedTextField(f);
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         allowedTable = new javax.swing.JTable();
-        allConnectionsEnabled = new javax.swing.JCheckBox();
+        allConnectionsBox = new javax.swing.JCheckBox();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setTitle("NetMessage Settings");
 
+        jLabel2.setText("IN DEVELOPMENT");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 449, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(165, 165, 165)
+                .addComponent(jLabel2)
+                .addContainerGap(178, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 232, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(104, 104, 104)
+                .addComponent(jLabel2)
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         tabs.addTab("General", jPanel1);
 
         jLabel1.setText("Port:");
 
-        portField.setText("5555");
+        portField.setText(NetMessage.networkSettings.get("port", "5555"));
 
         allowedTable.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.highlight"));
-        allowedTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        //Data double vector
+        //Oracle required this, not me
+        Vector<Vector<String>> data = new Vector<>();
 
-            },
-            new String [] {
-                "Name", "IP"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
+        for(int i = 0; i < NetMessage.networkSettings.getInt("tableRowCount", 0); i++) {
+            Vector<String> d = new Vector<String>();
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+            d.add(NetMessage.networkSettings.get("Name;" + i, ""));
+            d.add(NetMessage.networkSettings.get("IP;"+i, "127.0.0.1"));
+
+            data.add(i, d);
+        }
+
+        //Names Vector
+        Vector<String> names = new Vector<String>();
+        names.add("Name");
+        names.add("IP");
+        allowedTable.setModel(new javax.swing.table.DefaultTableModel(data, names)
+        );
+        if(NetMessage.networkSettings.getBoolean("allowAllConnections", true) == true) {
+            allowedTable.setEnabled(false);
+        } else {
+            allowedTable.setEnabled(true);
+        }
+        allowedTable.setToolTipText("Press enter to add a new row");
         allowedTable.setColumnSelectionAllowed(true);
-        allowedTable.setEnabled(false);
         allowedTable.getTableHeader().setReorderingAllowed(false);
         allowedTable.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 allowedTablePropertyChange(evt);
             }
         });
+        allowedTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                allowedTableKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(allowedTable);
         allowedTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (allowedTable.getColumnModel().getColumnCount() > 0) {
             allowedTable.getColumnModel().getColumn(1).setCellEditor(new IPEditor());
-            allowedTable.getColumnModel().getColumn(1).setCellRenderer(null);
         }
 
-        allConnectionsEnabled.setSelected(true);
-        allConnectionsEnabled.setText("Allow Connections From All Clients");
-        allConnectionsEnabled.addActionListener(new java.awt.event.ActionListener() {
+        allConnectionsBox.setSelected(NetMessage.networkSettings.getBoolean("allowAllConnections", true));
+        allConnectionsBox.setText("Allow Connections From All Clients");
+        allConnectionsBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                allConnectionsEnabledActionPerformed(evt);
+                allConnectionsBoxActionPerformed(evt);
             }
         });
 
@@ -142,8 +174,8 @@ public class SettingsDialog extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(allConnectionsEnabled)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(allConnectionsBox)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,8 +186,8 @@ public class SettingsDialog extends javax.swing.JFrame {
                     .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(allConnectionsEnabled)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(allConnectionsBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
@@ -171,6 +203,11 @@ public class SettingsDialog extends javax.swing.JFrame {
         });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -198,14 +235,17 @@ public class SettingsDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void allConnectionsEnabledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allConnectionsEnabledActionPerformed
-        allowedTable.setEnabled(!allConnectionsEnabled.isSelected());
-    }//GEN-LAST:event_allConnectionsEnabledActionPerformed
+    private void allConnectionsBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allConnectionsBoxActionPerformed
+        allowedTable.setEnabled(!allConnectionsBox.isSelected());
+    }//GEN-LAST:event_allConnectionsBoxActionPerformed
 
     private void allowedTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_allowedTablePropertyChange
         DefaultTableModel dtm = (DefaultTableModel)allowedTable.getModel();
         
         //Prevents editing the table is the checkbox is unchecked
+        
+        //Check if we enabled the table or not
+        //TODO: Probably a good idea to move this somewhere else
         if(evt.getPropertyName().equals("enabled") && evt.getNewValue().equals(true) && dtm.getRowCount() == 0) {
             //If there is nothing in the table, create a new row and edit it.
             dtm.addRow(new Object[]{"", ""});
@@ -219,23 +259,68 @@ public class SettingsDialog extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_allowedTablePropertyChange
 
+    
+    
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        System.out.println(this.allowedTable.getValueAt(0, 1));
+        try {
+            //Create a new Preference class everytime, ensures override
+            NetMessage.generalSettings.clear();
+            NetMessage.networkSettings.clear();
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(SettingsDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //General Settings code goes here
+        
+        //Network Settings Code
+        String v = this.portField.getText();
+        NetMessage.networkSettings.put("port", v);
+        
+        if(this.allConnectionsBox.isSelected()) {
+            //Allow all connections
+            NetMessage.networkSettings.putBoolean("allowAllConnections", true);
+        } else {
+            NetMessage.networkSettings.putBoolean("allowAllConnections", false);
+            
+            NetMessage.networkSettings.putInt("tableRowCount", this.allowedTable.getModel().getRowCount());
+            for(int i = 0; i < this.allowedTable.getModel().getRowCount(); i++) {
+                NetMessage.networkSettings.put("Name;" + i, (String)allowedTable.getValueAt(i, 0));
+                NetMessage.networkSettings.put("IP;" + i, (String)allowedTable.getValueAt(i, 1));
+            }
+        }
+        
+        //All done!
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }//GEN-LAST:event_okButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void allowedTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_allowedTableKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            DefaultTableModel dtm = (DefaultTableModel)allowedTable.getModel();
+            dtm.addRow(new Object[]{"", ""});
+            this.allowedTable.setModel(dtm);
+            this.allowedTable.requestFocusInWindow();
+            this.allowedTable.editCellAt(this.allowedTable.getModel().getRowCount(), 0);
+        }
+    }//GEN-LAST:event_allowedTableKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox allConnectionsEnabled;
+    private javax.swing.JCheckBox allConnectionsBox;
     private javax.swing.JTable allowedTable;
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton okButton;
     private javax.swing.JFormattedTextField portField;
-    private NumberFormat f;
+    private RegexFormatter f;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }

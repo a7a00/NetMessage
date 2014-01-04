@@ -12,13 +12,17 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.prefs.Preferences;
 
 /**
  *
  * @author cnrobotics
  */
-class NetMessage {
+public class NetMessage {
 
+    public static final Preferences generalSettings = Preferences.userNodeForPackage(netmessage.NetMessage.class).node("general");
+    public static final Preferences networkSettings = Preferences.userNodeForPackage(netmessage.NetMessage.class).node("network");
+    
     //This is the socket we open so the Robot can communitcate with us
     private ServerSocket server;
     //This is the connection generated once the client connects with us
