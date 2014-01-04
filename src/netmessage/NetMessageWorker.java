@@ -41,28 +41,37 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
     private boolean stopRecieving = false;
     //private boolean useRaw = false;
     
-    public NetMessageWorker(WindowMain window) {
+    /**
+     * Creates a new NetMessageWorker by loading the configuration or using defaults if it doesn't work.
+     * @param window A window to send messages through.
+     */
+    public NetMessageWorker(WindowMain window){
         this.window = window;
         try {
-            nm = new NetMessage();
+            nm = new NetMessage(NetMessage.networkSettings.getInt("port", 5555), NetMessage.networkSettings.getInt("timeout", 5000));
+            window.AppendStyledText("::", WindowMain.NM_PRE);
+            window.AppendStyledLine("Hosting on port" + nm.getPort(), WindowMain.NM_MSG);
+
         } catch (IOException ex) {
             try {
                 window.AppendStyledText("::", WindowMain.NM_PRE);
-                window.AppendStyledLine("Error: Could not estabish a server on port " + nm.getPort(), WindowMain.NM_ERROR);
+                window.AppendStyledLine("Error: Could not estabish a server on port " + NetMessage.networkSettings.getInt("port", 5555), WindowMain.NM_ERROR);
             } catch (BadLocationException ex1) {
                 Logger.getLogger(NetMessageWorker.class.getName()).log(Level.SEVERE, null, ex1);
             }
+        } catch (BadLocationException ex) {
+            Logger.getLogger(NetMessageWorker.class.getName()).log(Level.SEVERE, null, ex);
         }  
     }
     
-    public NetMessageWorker(WindowMain window, int port) {
+    public NetMessageWorker(WindowMain window, int port, int timeout) {
         this.window = window;
         try {
-            nm = new NetMessage(port);
+            nm = new NetMessage(port, timeout);
         } catch (IOException ex) {
             try {
                 window.AppendStyledText("::", WindowMain.NM_PRE);
-                window.AppendStyledLine("Error: Could not estabish a server on port " + nm.getPort(), WindowMain.NM_ERROR);
+                window.AppendStyledLine("Error: Could not estabish a server on port " + port, WindowMain.NM_ERROR);
             } catch (BadLocationException ex1) {
                 Logger.getLogger(NetMessageWorker.class.getName()).log(Level.SEVERE, null, ex1);
             }
@@ -86,6 +95,8 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
         //Return an error code if connection failed
         if(failedAttempts >= this.maxFailedAttempts) {
             publish(this.createLError("Error: Could not create connection with client!"));
+            //Unbind the port
+            nm.close();
             return 2;
         }
         

@@ -161,7 +161,7 @@ public class WindowMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ConnectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnectButtonActionPerformed
-        worker = new NetMessageWorker(this, 5555);
+        worker = new NetMessageWorker(this);
         worker.execute();
     }//GEN-LAST:event_ConnectButtonActionPerformed
 

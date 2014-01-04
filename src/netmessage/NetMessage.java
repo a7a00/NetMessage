@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 /**
@@ -30,26 +32,16 @@ public class NetMessage {
     //Anything we get from the Robot will be read by this
     private BufferedReader clientInput;
     //The default port is 5555
-    private int port;
-    
-    /**
-     * Creates as new NetMessage object on port 5000.
-     * @throws IOException if there is an error creating the socket. Usually it because the port is already bound.
-     */
-    public NetMessage() throws IOException {
-        server = new ServerSocket(5000);
-        server.setSoTimeout(5000);
-        this.port = 5555;
-    }
-    
+    private int port = 5555;
+        
     /**
      * Creates a new NetMessages on the specified port.
      * @param port Port number to open NetMessage on
      * @throws IOException if there is an error creating the socket. Usually it's because the port is already bound
      */
-    public NetMessage(int port) throws IOException {
+    public NetMessage(int port, int timeout) throws IOException {
         server = new ServerSocket(port);
-        server.setSoTimeout(5000);
+        server.setSoTimeout(timeout);
         this.port = port;
     }
     /**
@@ -77,6 +69,17 @@ public class NetMessage {
      */
     public BufferedReader getReader() {
         return this.clientInput;
+    }
+    
+    /**
+     * Closes the server socket
+     */
+    public void close() {
+        try {
+            server.close();
+        } catch (IOException ex) {
+            Logger.getLogger(NetMessage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public int getPort() {
