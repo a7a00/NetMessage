@@ -40,11 +40,11 @@ public class WindowMain extends javax.swing.JFrame {
         NM_MSG.addAttribute(StyleConstants.Foreground, Color.WHITE);
         NM_MSG.addAttribute(StyleConstants.Bold, true);
         
-        NM_PRE.addAttribute(StyleConstants.Foreground, Color.BLUE);
-        NM_PRE.addAttribute(StyleConstants.Bold, true);
-        
         NM_PRE.addAttribute(StyleConstants.Foreground, Color.GREEN);
         NM_PRE.addAttribute(StyleConstants.Bold, true);
+        
+        NM_OK.addAttribute(StyleConstants.Foreground, Color.getHSBColor(75, 100, 100));
+        NM_OK.addAttribute(StyleConstants.Bold, true);
         
         settings = new SettingsDialog();
     }
