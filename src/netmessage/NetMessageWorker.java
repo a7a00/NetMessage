@@ -48,7 +48,7 @@ public class NetMessageWorker extends SwingWorker<Integer, String>{
     public NetMessageWorker(WindowMain window){
         this.window = window;
         try {
-            nm = new NetMessage(NetMessage.networkSettings.getInt("port", 5555), NetMessage.networkSettings.getInt("timeout", 5000));
+            nm = new NetMessage(NetMessage.networkSettings.getInt("port", 5555), NetMessage.networkSettings.getInt("timeout", 5000) * 1000);
             window.AppendStyledText("::", WindowMain.NM_PRE);
             window.AppendStyledLine("Hosting on port" + nm.getPort(), WindowMain.NM_MSG);
 
