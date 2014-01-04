@@ -23,6 +23,7 @@ package netmessage.ui.settings;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.text.NumberFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,13 +42,6 @@ public class SettingsDialog extends javax.swing.JFrame {
      */
     public SettingsDialog() {
         initComponents();
-        
-        //Load the config
-        loadConfig();
-    }
-
-    private void loadConfig() {
-        portField.setText(NetMessage.networkSettings.get("port", "5555"));
     }
     
     /**
@@ -59,7 +53,7 @@ public class SettingsDialog extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jTextField1 = new javax.swing.JTextField();
         tabs = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -71,8 +65,14 @@ public class SettingsDialog extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         allowedTable = new javax.swing.JTable();
         allConnectionsBox = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        NumberFormat f = NumberFormat.getInstance();
+        f.setMinimumIntegerDigits(1);
+        ctField = new javax.swing.JFormattedTextField(f);
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+
+        jTextField1.setText("jTextField1");
 
         setTitle("NetMessage Settings");
 
@@ -85,7 +85,7 @@ public class SettingsDialog extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(165, 165, 165)
                 .addComponent(jLabel2)
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(199, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,6 +153,11 @@ public class SettingsDialog extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Connection Timeout(Sec):");
+
+        Integer ctFieldText = NetMessage.networkSettings.getInt("timeout", 5);
+        ctField.setText(ctFieldText.toString());
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -162,19 +167,24 @@ public class SettingsDialog extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jSeparator1))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 12, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(allConnectionsBox)
+                        .addGap(0, 33, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(allConnectionsBox))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ctField, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -183,7 +193,9 @@ public class SettingsDialog extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(ctField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -275,6 +287,8 @@ public class SettingsDialog extends javax.swing.JFrame {
         String v = this.portField.getText();
         NetMessage.networkSettings.put("port", v);
         
+        NetMessage.networkSettings.putInt("timeout", Integer.parseInt(ctField.getText()));
+        
         if(this.allConnectionsBox.isSelected()) {
             //Allow all connections
             NetMessage.networkSettings.putBoolean("allowAllConnections", true);
@@ -311,13 +325,15 @@ public class SettingsDialog extends javax.swing.JFrame {
     private javax.swing.JCheckBox allConnectionsBox;
     private javax.swing.JTable allowedTable;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JFormattedTextField ctField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton okButton;
     private javax.swing.JFormattedTextField portField;
     private RegexFormatter f;
